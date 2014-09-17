@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Отвыкатель</string>
+    <string name="m__main__add">Добавить…</string>
+    <string name="m__main__settings">Настройки…</string>
+    <string name="f__add__hint">От чего отвыкаем?</string>
+</resources>

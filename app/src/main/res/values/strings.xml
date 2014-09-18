@@ -4,4 +4,9 @@
     <string name="m__main__add">Добавить…</string>
     <string name="m__main__settings">Настройки…</string>
     <string name="f__add__hint">От чего отвыкаем?</string>
+    <string-array name="f__add__quick_choices">
+        <item>1F6AC</item> <!-- Сигареты -->
+        <item>1F37A</item> <!-- Алкоголь -->
+        <item>1F469</item> <!-- Женщины -->
+    </string-array>
 </resources>

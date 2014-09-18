@@ -6,6 +6,7 @@ import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.micdm.nobadhabits.CustomApplication;
@@ -34,8 +35,25 @@ public class AddHabitFragment extends DialogFragment {
     }
 
     private View setupView() {
-        _titleView = (TextView) View.inflate(getActivity(), R.layout.f__add, null);
-        return _titleView;
+        View view = View.inflate(getActivity(), R.layout.f__add, null);
+        _titleView = (TextView) view.findViewById(R.id.f__add__title);
+        setupChoicesView(view);
+        return view;
+    }
+
+    private void setupChoicesView(View view) {
+        ViewGroup choicesView = (ViewGroup) view.findViewById(R.id.f__add__quick_choices);
+        for (String choice: getResources().getStringArray(R.array.f__add__quick_choices)) {
+            TextView choiceView = (TextView) View.inflate(getActivity(), R.layout.v__add_quick_choice, null);
+            choiceView.setText(new String(Character.toChars(Integer.parseInt(choice, 16))));
+            choiceView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    _titleView.setText(((TextView) v).getText());
+                }
+            });
+            choicesView.addView(choiceView);
+        }
     }
 
     private EventManager getEventManager() {

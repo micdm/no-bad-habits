@@ -1,6 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<EditText xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:hint="@string/f__add__hint"
-    android:textSize="20sp"/>
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+    <EditText
+        android:id="@+id/f__add__title"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:hint="@string/f__add__hint"
+        android:padding="10dp"
+        android:textSize="20sp"/>
+    <LinearLayout
+        android:id="@+id/f__add__quick_choices"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"/>
+</LinearLayout>

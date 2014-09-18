@@ -5,4 +5,11 @@
     <style name="ActionBarStyle" parent="android:Widget.Holo.Light.ActionBar">
         <item name="android:displayOptions">showHome|showTitle</item>
     </style>
+    <style name="Duration">
+        <item name="android:shadowColor">#000</item>
+        <item name="android:shadowRadius">1</item>
+        <item name="android:shadowDx">-1</item>
+        <item name="android:layout_marginRight">5dp</item>
+        <item name="letterSpacing">-2</item>
+    </style>
 </resources>

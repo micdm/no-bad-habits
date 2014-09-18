@@ -6,7 +6,6 @@ p.load(new FileInputStream(rootProject.file('../keys/sign.properties')))
 android {
     compileSdkVersion 19
     buildToolsVersion "20.0.0"
-
     defaultConfig {
         applicationId "com.micdm.nobadhabits"
         minSdkVersion 16
@@ -39,9 +38,14 @@ android {
     }
     productFlavors {
     }
+    packagingOptions {
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/NOTICE.txt'
+    }
 }
 
 dependencies {
     compile 'com.android.support:support-v4:20.0.0'
+    compile 'org.apache.commons:commons-lang3:3.3.2'
     compile 'joda-time:joda-time:2.3'
 }

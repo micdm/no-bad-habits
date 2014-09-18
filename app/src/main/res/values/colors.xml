@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- http://colorscheme.ru/#36411w0w0w0w0 -->
+<resources>
+    <color name="duration_unit_year">#00ab6f</color>
+    <color name="duration_unit_month">#3bda00</color>
+    <color name="duration_unit_week">#ff5300</color>
+    <color name="duration_unit_day">#f10026</color>
+</resources>

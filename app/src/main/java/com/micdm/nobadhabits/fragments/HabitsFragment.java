@@ -1,6 +1,7 @@
 package com.micdm.nobadhabits.fragments;
 
 import android.app.Fragment;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,29 +18,24 @@ import com.micdm.nobadhabits.events.EventType;
 import com.micdm.nobadhabits.events.events.LoadHabitsEvent;
 import com.micdm.nobadhabits.events.events.RequestLoadHabitsEvent;
 
+import org.apache.commons.lang3.StringUtils;
+import org.joda.time.Period;
+
 import java.util.List;
 
 public class HabitsFragment extends Fragment {
 
     private class HabitsAdapter extends BaseAdapter {
 
+        private final Typeface TYPEFACE = Typeface.createFromAsset(getActivity().getAssets(), "FontAwesome.otf");
+
         private class ViewHolder {
 
-            private final TextView _titleView;
-            private final TextView _durationView;
-
-            public ViewHolder(TextView titleView, TextView durationView) {
-                _titleView = titleView;
-                _durationView = durationView;
-            }
-
-            public TextView getTitleView() {
-                return _titleView;
-            }
-
-            public TextView getDurationView() {
-                return _durationView;
-            }
+            public TextView titleView;
+            public TextView durationYearsView;
+            public TextView durationMonthsView;
+            public TextView durationWeeksView;
+            public TextView durationDaysView;
         }
 
         private List<Habit> _habits;
@@ -61,20 +57,51 @@ public class HabitsFragment extends Fragment {
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-            ViewHolder holder;
             if (convertView == null) {
                 convertView = View.inflate(getActivity(), R.layout.v__habits_item, null);
-                TextView titleView = (TextView) convertView.findViewById(R.id.v__habits_item__title);
-                TextView durationView = (TextView) convertView.findViewById(R.id.v__habits_item__duration);
-                holder = new ViewHolder(titleView, durationView);
-                convertView.setTag(holder);
-            } else {
-                holder = (ViewHolder) convertView.getTag();
             }
+            ViewHolder holder = getHolder(convertView);
             Habit habit = getItem(position);
-            holder.getTitleView().setText(habit.getTitle());
-            holder.getDurationView().setText(String.valueOf(habit.getDuration().getSeconds()));
+            holder.titleView.setText(habit.getTitle());
+            setupDurationViews(holder, habit);
             return convertView;
+        }
+
+        private ViewHolder getHolder(View view) {
+            ViewHolder holder = (ViewHolder) view.getTag();
+            if (holder == null) {
+                holder = new ViewHolder();
+                holder.titleView = (TextView) view.findViewById(R.id.v__habits_item__title);
+                holder.durationYearsView = (TextView) view.findViewById(R.id.v__habits_item__duration_years);
+                holder.durationMonthsView = (TextView) view.findViewById(R.id.v__habits_item__duration_months);
+                holder.durationWeeksView = (TextView) view.findViewById(R.id.v__habits_item__duration_weeks);
+                holder.durationDaysView = (TextView) view.findViewById(R.id.v__habits_item__duration_days);
+                view.setTag(holder);
+            }
+            return holder;
+        }
+
+        private void setupDurationViews(ViewHolder holder, Habit habit) {
+            Period duration = habit.getDuration();
+            setupDurationView(holder.durationYearsView, duration.getYears(), false);
+            setupDurationView(holder.durationMonthsView, duration.getMonths(), false);
+            setupDurationView(holder.durationWeeksView, duration.getWeeks(), false);
+            setupDurationView(holder.durationDaysView, duration.getDays(), true);
+        }
+
+        private void setupDurationView(TextView view, int duration, boolean showIfIncomplete) {
+            view.setTypeface(TYPEFACE);
+            if (duration == 0) {
+                if (showIfIncomplete) {
+                    view.setText(getString(R.string.f__habits__duration_unit_incomplete));
+                    view.setVisibility(View.VISIBLE);
+                } else {
+                    view.setVisibility(View.GONE);
+                }
+            } else {
+                view.setText(StringUtils.repeat(getString(R.string.f__habits__duration_unit), duration));
+                view.setVisibility(View.VISIBLE);
+            }
         }
 
         public void setHabits(List<Habit> habits) {

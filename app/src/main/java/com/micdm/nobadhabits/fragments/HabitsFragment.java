@@ -3,9 +3,14 @@ package com.micdm.nobadhabits.fragments;
 import android.app.Fragment;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.view.ActionMode;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -17,6 +22,7 @@ import com.micdm.nobadhabits.events.EventManager;
 import com.micdm.nobadhabits.events.EventType;
 import com.micdm.nobadhabits.events.events.LoadHabitsEvent;
 import com.micdm.nobadhabits.events.events.RequestLoadHabitsEvent;
+import com.micdm.nobadhabits.events.events.RequestRemoveHabitEvent;
 
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.Period;
@@ -31,6 +37,7 @@ public class HabitsFragment extends Fragment {
 
         private class ViewHolder {
 
+            public View contentView;
             public TextView titleView;
             public TextView durationYearsView;
             public TextView durationMonthsView;
@@ -62,6 +69,7 @@ public class HabitsFragment extends Fragment {
             }
             ViewHolder holder = getHolder(convertView);
             Habit habit = getItem(position);
+            holder.contentView.setSelected(selectedHabit == habit);
             holder.titleView.setText(habit.getTitle());
             setupDurationViews(holder, habit);
             return convertView;
@@ -71,6 +79,7 @@ public class HabitsFragment extends Fragment {
             ViewHolder holder = (ViewHolder) view.getTag();
             if (holder == null) {
                 holder = new ViewHolder();
+                holder.contentView = view.findViewById(R.id.v__habits_item__content);
                 holder.titleView = (TextView) view.findViewById(R.id.v__habits_item__title);
                 holder.durationYearsView = (TextView) view.findViewById(R.id.v__habits_item__duration_years);
                 holder.durationMonthsView = (TextView) view.findViewById(R.id.v__habits_item__duration_months);
@@ -110,12 +119,55 @@ public class HabitsFragment extends Fragment {
         }
     }
 
-    private ListView _habitsView;
+    private final ActionMode.Callback onStartActionModeListener = new ActionMode.Callback() {
+        @Override
+        public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+            MenuInflater inflater = mode.getMenuInflater();
+            inflater.inflate(R.menu.habit, menu);
+            return true;
+        }
+        @Override
+        public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+            return false;
+        }
+        @Override
+        public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+            switch (item.getItemId()) {
+                case R.id.m__habit_remove:
+                    getEventManager().publish(new RequestRemoveHabitEvent(selectedHabit));
+                    selectedHabit = null;
+                    mode.finish();
+                    return true;
+            }
+            return false;
+        }
+        @Override
+        public void onDestroyActionMode(ActionMode mode) {
+            selectedHabit = null;
+            ((HabitsAdapter) habitsView.getAdapter()).notifyDataSetChanged();
+        }
+    };
+
+    private Habit selectedHabit;
+
+    private ListView habitsView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        _habitsView = (ListView) inflater.inflate(R.layout.f__habits, null);
-        return _habitsView;
+        habitsView = (ListView) inflater.inflate(R.layout.f__habits, null);
+        habitsView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                if (selectedHabit == null) {
+                    view.startActionMode(onStartActionModeListener);
+                }
+                HabitsAdapter adapter = (HabitsAdapter) parent.getAdapter();
+                selectedHabit = adapter.getItem(position);
+                adapter.notifyDataSetChanged();
+                return true;
+            }
+        });
+        return habitsView;
     }
 
     @Override
@@ -130,10 +182,10 @@ public class HabitsFragment extends Fragment {
         manager.subscribe(this, EventType.LOAD_HABITS, new EventManager.OnEventListener<LoadHabitsEvent>() {
             @Override
             public void onEvent(LoadHabitsEvent event) {
-                HabitsAdapter adapter = (HabitsAdapter) _habitsView.getAdapter();
+                HabitsAdapter adapter = (HabitsAdapter) habitsView.getAdapter();
                 if (adapter == null) {
                     adapter = new HabitsAdapter();
-                    _habitsView.setAdapter(adapter);
+                    habitsView.setAdapter(adapter);
                 }
                 adapter.setHabits(event.getHabits());
             }

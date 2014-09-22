@@ -14,6 +14,7 @@ import com.micdm.nobadhabits.events.EventType;
 import com.micdm.nobadhabits.events.events.LoadHabitsEvent;
 import com.micdm.nobadhabits.events.events.RequestAddHabitEvent;
 import com.micdm.nobadhabits.events.events.RequestLoadHabitsEvent;
+import com.micdm.nobadhabits.events.events.RequestRemoveHabitEvent;
 import com.micdm.nobadhabits.fragments.AddHabitFragment;
 import com.micdm.nobadhabits.fragments.HabitsFragment;
 import com.micdm.nobadhabits.misc.HabitManager;
@@ -23,7 +24,7 @@ public class MainActivity extends Activity {
     private static final String HABIT_LIST_FRAGMENT_TAG = "habit_list";
     private static final String ADD_HABIT_FRAGMENT_TAG = "add_habit";
 
-    private final HabitManager _habitManager = new HabitManager(this);
+    private final HabitManager habitManager = new HabitManager(this);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,14 +39,21 @@ public class MainActivity extends Activity {
         manager.subscribe(this, EventType.REQUEST_LOAD_HABITS, new EventManager.OnEventListener<RequestLoadHabitsEvent>() {
             @Override
             public void onEvent(RequestLoadHabitsEvent event) {
-                manager.publish(new LoadHabitsEvent(_habitManager.get()));
+                manager.publish(new LoadHabitsEvent(habitManager.get()));
             }
         });
         manager.subscribe(this, EventType.REQUEST_ADD_HABIT, new EventManager.OnEventListener<RequestAddHabitEvent>() {
             @Override
             public void onEvent(RequestAddHabitEvent event) {
-                _habitManager.add(event.getTitle());
-                manager.publish(new LoadHabitsEvent(_habitManager.get()));
+                habitManager.add(event.getTitle());
+                manager.publish(new LoadHabitsEvent(habitManager.get()));
+            }
+        });
+        manager.subscribe(this, EventType.REQUEST_REMOVE_HABIT, new EventManager.OnEventListener<RequestRemoveHabitEvent>() {
+            @Override
+            public void onEvent(RequestRemoveHabitEvent event) {
+                habitManager.remove(event.getHabit());
+                manager.publish(new LoadHabitsEvent(habitManager.get()));
             }
         });
     }
@@ -67,8 +75,6 @@ public class MainActivity extends Activity {
         switch (item.getItemId()) {
             case R.id.m__main__add:
                 showAddHabitDialog();
-                return true;
-            case R.id.m__main__settings:
                 return true;
         }
         return super.onOptionsItemSelected(item);

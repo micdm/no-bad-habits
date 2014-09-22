@@ -9,6 +9,7 @@ import com.micdm.nobadhabits.events.Event;
 import com.micdm.nobadhabits.events.EventType;
 import com.micdm.nobadhabits.events.events.LoadHabitsEvent;
 import com.micdm.nobadhabits.events.events.RequestAddHabitEvent;
+import com.micdm.nobadhabits.events.events.RequestRemoveHabitEvent;
 import com.micdm.nobadhabits.parcels.HabitParcel;
 
 import java.util.ArrayList;
@@ -30,6 +31,9 @@ public class EventConverter {
             case REQUEST_ADD_HABIT:
                 buildIntentForRequestAddHabitEvent((RequestAddHabitEvent) event, intent);
                 break;
+            case REQUEST_REMOVE_HABIT:
+                buildIntentForRequestRemoveHabitEvent((RequestRemoveHabitEvent) event, intent);
+                break;
         }
         return intent;
     }
@@ -48,5 +52,9 @@ public class EventConverter {
 
     private void buildIntentForRequestAddHabitEvent(RequestAddHabitEvent event, Intent intent) {
         intent.putExtra("title", event.getTitle());
+    }
+
+    private void buildIntentForRequestRemoveHabitEvent(RequestRemoveHabitEvent event, Intent intent) {
+        intent.putExtra("habit", new HabitParcel(event.getHabit()));
     }
 }

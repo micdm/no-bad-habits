@@ -3,7 +3,7 @@
     <string name="app_name">Отвыкатель</string>
 
     <string name="m__main__add">Добавить…</string>
-    <string name="m__main__settings">Настройки…</string>
+    <string name="m__habit__remove">Удалить</string>
 
     <string name="f__add__hint">От чего отвыкаем?</string>
     <string-array name="f__add__quick_choices">

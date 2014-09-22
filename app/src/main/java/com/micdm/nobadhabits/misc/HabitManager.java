@@ -18,43 +18,42 @@ public class HabitManager {
 
     private static final String PREF_KEY = "habits";
 
-    private final Context _context;
-    private List<Habit> _habits;
+    private final Context context;
+    private List<Habit> habits;
 
     public HabitManager(Context context) {
-        _context = context;
+        this.context = context;
     }
 
     public List<Habit> get() {
-        if (_habits == null) {
-            _habits = new ArrayList<Habit>();
-            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(_context);
-            String serialized = prefs.getString(PREF_KEY, null);
-            if (serialized != null) {
-                _habits.addAll(unserialize(serialized));
-            }
+        if (habits == null) {
+            habits = new ArrayList<Habit>(load());
         }
-        return _habits;
-    }
-
-    private List<Habit> unserialize(String serialized) {
-        List<Habit> habits = new ArrayList<Habit>();
-        try {
-            JSONArray habitsJson = new JSONArray(serialized);
-            for (int i = 0; i < habitsJson.length(); i += 1) {
-                JSONObject habitJson = habitsJson.getJSONObject(i);
-                habits.add(new Habit(habitJson.getString("title"), new DateTime(habitJson.getString("start_date"))));
-            }
-        } catch (JSONException e) {}
         return habits;
     }
 
     public void add(String title) {
-        _habits.add(new Habit(title, DateTime.now()));
-        SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(_context).edit();
-        editor.putString(PREF_KEY, serialize(_habits));
+        habits.add(new Habit(title, DateTime.now()));
+        save(habits);
+        habits = null;
+    }
+
+    public void remove(Habit habit) {
+        habits.remove(habit);
+        save(habits);
+        habits = null;
+    }
+
+    private List<Habit> load() {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        String serialized = prefs.getString(PREF_KEY, null);
+        return (serialized == null) ? new ArrayList<Habit>() : unserialize(serialized);
+    }
+
+    private void save(List<Habit> habits) {
+        SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(context).edit();
+        editor.putString(PREF_KEY, serialize(habits));
         editor.commit();
-        _habits = null;
     }
 
     private String serialize(List<Habit> habits) {
@@ -70,5 +69,17 @@ public class HabitManager {
         } catch (JSONException e) {
             return null;
         }
+    }
+
+    private List<Habit> unserialize(String serialized) {
+        List<Habit> habits = new ArrayList<Habit>();
+        try {
+            JSONArray habitsJson = new JSONArray(serialized);
+            for (int i = 0; i < habitsJson.length(); i += 1) {
+                JSONObject habitJson = habitsJson.getJSONObject(i);
+                habits.add(new Habit(habitJson.getString("title"), new DateTime(habitJson.getString("start_date"))));
+            }
+        } catch (JSONException e) {}
+        return habits;
     }
 }

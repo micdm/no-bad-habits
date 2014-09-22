@@ -1,17 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- Общее -->
     <string name="app_name">Отвыкатель</string>
-
+    <!-- Меню -->
     <string name="m__main__add">Добавить…</string>
     <string name="m__habit__remove">Удалить</string>
-
+    <!-- Фрагмент для добавления привычки -->
     <string name="f__add__hint">От чего отвыкаем?</string>
     <string-array name="f__add__quick_choices">
         <item>1F6AC</item> <!-- Сигареты -->
         <item>1F37A</item> <!-- Алкоголь -->
         <item>1F469</item> <!-- Женщины -->
     </string-array>
-
-    <string name="f__habits__duration_unit">\uf005</string>
-    <string name="f__habits__duration_unit_incomplete">\uf123</string>
+    <!-- Фрагмент со списком привычек -->
+    <string name="f__habits__text_duration_first_day">Первый день</string>
+    <string name="f__habits__text_duration">%1$s %2$s</string>
+    <plurals name="f__habits__text_duration_unit">
+        <item quantity="one">день</item>
+        <item quantity="few">дня</item>
+        <item quantity="many">дней</item>
+    </plurals>
+    <string name="f__habits__graphics_duration_incomplete_unit">\uf123</string>
+    <string name="f__habits__graphics_duration_unit">\uf005</string>
 </resources>

@@ -25,11 +25,18 @@ import com.micdm.nobadhabits.events.events.RequestLoadHabitsEvent;
 import com.micdm.nobadhabits.events.events.RequestRemoveHabitEvent;
 
 import org.apache.commons.lang3.StringUtils;
+import org.joda.time.DateTime;
+import org.joda.time.Days;
 import org.joda.time.Period;
 
 import java.util.List;
 
 public class HabitsFragment extends Fragment {
+
+    private static enum DurationMode {
+        TEXT,
+        GRAPHICS
+    }
 
     private class HabitsAdapter extends BaseAdapter {
 
@@ -39,6 +46,8 @@ public class HabitsFragment extends Fragment {
 
             public View contentView;
             public TextView titleView;
+            public TextView textDurationView;
+            public View graphicsDurationView;
             public TextView durationYearsView;
             public TextView durationMonthsView;
             public TextView durationWeeksView;
@@ -81,6 +90,8 @@ public class HabitsFragment extends Fragment {
                 holder = new ViewHolder();
                 holder.contentView = view.findViewById(R.id.v__habits_item__content);
                 holder.titleView = (TextView) view.findViewById(R.id.v__habits_item__title);
+                holder.textDurationView = (TextView) view.findViewById(R.id.v__habits_item__text_duration);
+                holder.graphicsDurationView = view.findViewById(R.id.v__habits_item__graphics_duration);
                 holder.durationYearsView = (TextView) view.findViewById(R.id.v__habits_item__duration_years);
                 holder.durationMonthsView = (TextView) view.findViewById(R.id.v__habits_item__duration_months);
                 holder.durationWeeksView = (TextView) view.findViewById(R.id.v__habits_item__duration_weeks);
@@ -91,24 +102,42 @@ public class HabitsFragment extends Fragment {
         }
 
         private void setupDurationViews(ViewHolder holder, Habit habit) {
-            Period duration = habit.getDuration();
-            setupDurationView(holder.durationYearsView, duration.getYears(), false);
-            setupDurationView(holder.durationMonthsView, duration.getMonths(), false);
-            setupDurationView(holder.durationWeeksView, duration.getWeeks(), false);
-            setupDurationView(holder.durationDaysView, duration.getDays(), true);
+            switch (durationMode) {
+                case TEXT:
+                    holder.graphicsDurationView.setVisibility(View.GONE);
+                    int days = Days.daysBetween(habit.getStartDate(), DateTime.now()).getDays();
+                    String text;
+                    if (days == 0) {
+                        text = getString(R.string.f__habits__text_duration_first_day);
+                    } else {
+                        text = getString(R.string.f__habits__text_duration, days, getResources().getQuantityString(R.plurals.f__habits__text_duration_unit, days));
+                    }
+                    holder.textDurationView.setText(text);
+                    holder.textDurationView.setVisibility(View.VISIBLE);
+                    break;
+                case GRAPHICS:
+                    holder.textDurationView.setVisibility(View.GONE);
+                    Period duration = new Period(habit.getStartDate(), DateTime.now());
+                    setupDurationView(holder.durationYearsView, duration.getYears(), false);
+                    setupDurationView(holder.durationMonthsView, duration.getMonths(), false);
+                    setupDurationView(holder.durationWeeksView, duration.getWeeks(), false);
+                    setupDurationView(holder.durationDaysView, duration.getDays(), true);
+                    holder.graphicsDurationView.setVisibility(View.VISIBLE);
+                    break;
+            }
         }
 
         private void setupDurationView(TextView view, int duration, boolean showIfIncomplete) {
             view.setTypeface(TYPEFACE);
             if (duration == 0) {
                 if (showIfIncomplete) {
-                    view.setText(getString(R.string.f__habits__duration_unit_incomplete));
+                    view.setText(getString(R.string.f__habits__graphics_duration_incomplete_unit));
                     view.setVisibility(View.VISIBLE);
                 } else {
                     view.setVisibility(View.GONE);
                 }
             } else {
-                view.setText(StringUtils.repeat(getString(R.string.f__habits__duration_unit), duration));
+                view.setText(StringUtils.repeat(getString(R.string.f__habits__graphics_duration_unit), duration));
                 view.setVisibility(View.VISIBLE);
             }
         }
@@ -148,6 +177,7 @@ public class HabitsFragment extends Fragment {
         }
     };
 
+    private DurationMode durationMode = DurationMode.GRAPHICS;
     private Habit selectedHabit;
 
     private ListView habitsView;
@@ -155,6 +185,20 @@ public class HabitsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         habitsView = (ListView) inflater.inflate(R.layout.f__habits, null);
+        habitsView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                switch (durationMode) {
+                    case TEXT:
+                        durationMode = DurationMode.GRAPHICS;
+                        break;
+                    case GRAPHICS:
+                        durationMode = DurationMode.TEXT;
+                        break;
+                }
+                ((HabitsAdapter) parent.getAdapter()).notifyDataSetChanged();
+            }
+        });
         habitsView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {

@@ -1,7 +1,6 @@
 package com.micdm.nobadhabits.data;
 
 import org.joda.time.DateTime;
-import org.joda.time.Period;
 
 public class Habit {
 
@@ -19,9 +18,5 @@ public class Habit {
 
     public DateTime getStartDate() {
         return _startDate;
-    }
-
-    public Period getDuration() {
-        return new Period(_startDate, DateTime.now());
     }
 }

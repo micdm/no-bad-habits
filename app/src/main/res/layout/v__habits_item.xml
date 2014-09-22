@@ -14,9 +14,15 @@
             android:id="@+id/v__habits_item__title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/v__habits_item__text"
+            android:textColor="@color/v__habits_item__title_text"
             android:textSize="25sp"/>
+        <TextView
+            android:id="@+id/v__habits_item__text_duration"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/v__habits_item__duration_text"/>
         <LinearLayout
+            android:id="@+id/v__habits_item__graphics_duration"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"

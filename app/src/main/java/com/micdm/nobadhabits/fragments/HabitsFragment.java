@@ -3,6 +3,7 @@ package com.micdm.nobadhabits.fragments;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.view.ActionMode;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -23,6 +24,7 @@ import com.micdm.nobadhabits.events.EventType;
 import com.micdm.nobadhabits.events.events.LoadHabitsEvent;
 import com.micdm.nobadhabits.events.events.RequestLoadHabitsEvent;
 import com.micdm.nobadhabits.events.events.RequestRemoveHabitEvent;
+import com.micdm.nobadhabits.misc.FragmentTag;
 
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
@@ -168,6 +170,14 @@ public class HabitsFragment extends Fragment {
         @Override
         public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
             switch (item.getItemId()) {
+                case R.id.m__habit_edit:
+                    FragmentManager manager = getChildFragmentManager();
+                    if (manager.findFragmentByTag(FragmentTag.EDIT_HABIT) == null) {
+                        EditHabitFragment.getInstance(selectedHabit).show(manager, FragmentTag.EDIT_HABIT);
+                    }
+                    selectedHabit = null;
+                    mode.finish();
+                    return true;
                 case R.id.m__habit_remove:
                     getEventManager().publish(new RequestRemoveHabitEvent(selectedHabit));
                     selectedHabit = null;

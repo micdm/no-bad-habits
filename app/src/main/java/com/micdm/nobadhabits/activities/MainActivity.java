@@ -12,17 +12,17 @@ import com.micdm.nobadhabits.R;
 import com.micdm.nobadhabits.events.EventManager;
 import com.micdm.nobadhabits.events.EventType;
 import com.micdm.nobadhabits.events.events.LoadHabitsEvent;
-import com.micdm.nobadhabits.events.events.RequestAddHabitEvent;
+import com.micdm.nobadhabits.events.events.RequestEditHabitEvent;
 import com.micdm.nobadhabits.events.events.RequestLoadHabitsEvent;
 import com.micdm.nobadhabits.events.events.RequestRemoveHabitEvent;
-import com.micdm.nobadhabits.fragments.AddHabitFragment;
+import com.micdm.nobadhabits.fragments.EditHabitFragment;
 import com.micdm.nobadhabits.fragments.HabitsFragment;
+import com.micdm.nobadhabits.misc.FragmentTag;
 import com.micdm.nobadhabits.misc.HabitManager;
 
-public class MainActivity extends FragmentActivity {
+import org.joda.time.DateTime;
 
-    private static final String HABIT_LIST_FRAGMENT_TAG = "habit_list";
-    private static final String ADD_HABIT_FRAGMENT_TAG = "add_habit";
+public class MainActivity extends FragmentActivity {
 
     private final HabitManager habitManager = new HabitManager(this);
 
@@ -42,10 +42,17 @@ public class MainActivity extends FragmentActivity {
                 manager.publish(new LoadHabitsEvent(habitManager.get()));
             }
         });
-        manager.subscribe(this, EventType.REQUEST_ADD_HABIT, new EventManager.OnEventListener<RequestAddHabitEvent>() {
+        manager.subscribe(this, EventType.REQUEST_EDIT_HABIT, new EventManager.OnEventListener<RequestEditHabitEvent>() {
             @Override
-            public void onEvent(RequestAddHabitEvent event) {
-                habitManager.add(event.getTitle(), event.getStartDate());
+            public void onEvent(RequestEditHabitEvent event) {
+                String id = event.getId();
+                String title = event.getTitle();
+                DateTime startDate = event.getStartDate();
+                if (id == null) {
+                    habitManager.add(title, startDate);
+                } else {
+                    habitManager.update(id, title, startDate);
+                }
                 manager.publish(new LoadHabitsEvent(habitManager.get()));
             }
         });
@@ -60,7 +67,7 @@ public class MainActivity extends FragmentActivity {
 
     private void addHabitListFragment() {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.add(R.id.a__main__content, new HabitsFragment(), HABIT_LIST_FRAGMENT_TAG);
+        transaction.add(R.id.a__main__content, new HabitsFragment(), FragmentTag.HABITS);
         transaction.commit();
     }
 
@@ -82,8 +89,8 @@ public class MainActivity extends FragmentActivity {
 
     private void showAddHabitDialog() {
         FragmentManager manager = getSupportFragmentManager();
-        if (manager.findFragmentByTag(ADD_HABIT_FRAGMENT_TAG) == null) {
-            (new AddHabitFragment()).show(manager, ADD_HABIT_FRAGMENT_TAG);
+        if (manager.findFragmentByTag(FragmentTag.EDIT_HABIT) == null) {
+            EditHabitFragment.getInstance().show(manager, FragmentTag.EDIT_HABIT);
         }
     }
 }

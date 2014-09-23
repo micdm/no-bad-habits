@@ -8,7 +8,7 @@ import com.micdm.nobadhabits.data.Habit;
 import com.micdm.nobadhabits.events.Event;
 import com.micdm.nobadhabits.events.EventType;
 import com.micdm.nobadhabits.events.events.LoadHabitsEvent;
-import com.micdm.nobadhabits.events.events.RequestAddHabitEvent;
+import com.micdm.nobadhabits.events.events.RequestEditHabitEvent;
 import com.micdm.nobadhabits.events.events.RequestRemoveHabitEvent;
 import com.micdm.nobadhabits.events.events.SelectDateEvent;
 import com.micdm.nobadhabits.parcels.HabitParcel;
@@ -29,8 +29,8 @@ public class EventConverter {
             case LOAD_HABITS:
                 buildIntentForLoadHabitsEvent((LoadHabitsEvent) event, intent);
                 break;
-            case REQUEST_ADD_HABIT:
-                buildIntentForRequestAddHabitEvent((RequestAddHabitEvent) event, intent);
+            case REQUEST_EDIT_HABIT:
+                buildIntentForRequestEditHabitEvent((RequestEditHabitEvent) event, intent);
                 break;
             case REQUEST_REMOVE_HABIT:
                 buildIntentForRequestRemoveHabitEvent((RequestRemoveHabitEvent) event, intent);
@@ -54,7 +54,8 @@ public class EventConverter {
         intent.putParcelableArrayListExtra("habits", parcels);
     }
 
-    private void buildIntentForRequestAddHabitEvent(RequestAddHabitEvent event, Intent intent) {
+    private void buildIntentForRequestEditHabitEvent(RequestEditHabitEvent event, Intent intent) {
+        intent.putExtra("id", event.getId());
         intent.putExtra("title", event.getTitle());
         intent.putExtra("start_date", event.getStartDate().toString());
     }

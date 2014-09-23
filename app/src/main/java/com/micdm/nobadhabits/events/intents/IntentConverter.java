@@ -7,7 +7,7 @@ import com.micdm.nobadhabits.data.Habit;
 import com.micdm.nobadhabits.events.Event;
 import com.micdm.nobadhabits.events.EventType;
 import com.micdm.nobadhabits.events.events.LoadHabitsEvent;
-import com.micdm.nobadhabits.events.events.RequestAddHabitEvent;
+import com.micdm.nobadhabits.events.events.RequestEditHabitEvent;
 import com.micdm.nobadhabits.events.events.RequestLoadHabitsEvent;
 import com.micdm.nobadhabits.events.events.RequestRemoveHabitEvent;
 import com.micdm.nobadhabits.events.events.SelectDateEvent;
@@ -27,8 +27,8 @@ public class IntentConverter {
                 return new RequestLoadHabitsEvent();
             case LOAD_HABITS:
                 return getLoadHabitsEvent(intent);
-            case REQUEST_ADD_HABIT:
-                return getRequestAddHabitEvent(intent);
+            case REQUEST_EDIT_HABIT:
+                return getRequestEditHabitEvent(intent);
             case REQUEST_REMOVE_HABIT:
                 return getRequestRemoveHabitEvent(intent);
             case SELECT_DATE:
@@ -58,10 +58,11 @@ public class IntentConverter {
         return new LoadHabitsEvent(habits);
     }
 
-    private RequestAddHabitEvent getRequestAddHabitEvent(Intent intent) {
+    private RequestEditHabitEvent getRequestEditHabitEvent(Intent intent) {
+        String id = intent.getStringExtra("id");
         String title = intent.getStringExtra("title");
         DateTime startDate = new DateTime(intent.getStringExtra("start_date"));
-        return new RequestAddHabitEvent(title, startDate);
+        return new RequestEditHabitEvent(id, title, startDate);
     }
 
     private RequestRemoveHabitEvent getRequestRemoveHabitEvent(Intent intent) {

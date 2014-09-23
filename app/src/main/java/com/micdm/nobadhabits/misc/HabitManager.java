@@ -13,6 +13,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class HabitManager {
 
@@ -33,9 +34,26 @@ public class HabitManager {
     }
 
     public void add(String title, DateTime startDate) {
-        habits.add(new Habit(title, startDate));
+        habits.add(new Habit(UUID.randomUUID().toString(), title, startDate));
         save(habits);
         habits = null;
+    }
+
+    public void update(String id, String title, DateTime startDate) {
+        Habit habit = getHabitById(habits, id);
+        habit.setTitle(title);
+        habit.setStartDate(startDate);
+        save(habits);
+        habits = null;
+    }
+
+    private Habit getHabitById(List<Habit> habits, String id) {
+        for (Habit habit: habits) {
+            if (habit.getId().equals(id)) {
+                return habit;
+            }
+        }
+        throw new RuntimeException(String.format("cannot find habit with id %s", id));
     }
 
     public void remove(Habit habit) {
@@ -61,6 +79,7 @@ public class HabitManager {
             JSONArray habitsJson = new JSONArray();
             for (Habit habit: habits) {
                 JSONObject habitJson = new JSONObject();
+                habitJson.put("id", habit.getId());
                 habitJson.put("title", habit.getTitle());
                 habitJson.put("start_date", habit.getStartDate().toString());
                 habitsJson.put(habitJson);
@@ -77,7 +96,10 @@ public class HabitManager {
             JSONArray habitsJson = new JSONArray(serialized);
             for (int i = 0; i < habitsJson.length(); i += 1) {
                 JSONObject habitJson = habitsJson.getJSONObject(i);
-                habits.add(new Habit(habitJson.getString("title"), new DateTime(habitJson.getString("start_date"))));
+                String id = habitJson.getString("id");
+                String title = habitJson.getString("title");
+                DateTime startDate = new DateTime(habitJson.getString("start_date"));
+                habits.add(new Habit(id, title, startDate));
             }
         } catch (JSONException e) {}
         return habits;

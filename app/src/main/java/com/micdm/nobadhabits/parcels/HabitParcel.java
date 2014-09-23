@@ -12,9 +12,10 @@ public class HabitParcel implements Parcelable {
     public static final Creator<Habit> CREATOR = new Creator<Habit>() {
 
         public Habit createFromParcel(Parcel in) {
+            String id = in.readString();
             String title = in.readString();
             DateTime startDate = new DateTime(in.readString());
-            return new Habit(title, startDate);
+            return new Habit(id, title, startDate);
         }
 
         public Habit[] newArray(int size) {
@@ -35,6 +36,7 @@ public class HabitParcel implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel out, int flags) {
+        out.writeString(habit.getId());
         out.writeString(habit.getTitle());
         out.writeString(habit.getStartDate().toString());
     }

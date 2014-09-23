@@ -54,16 +54,16 @@ public class HabitsFragment extends Fragment {
             public TextView durationDaysView;
         }
 
-        private List<Habit> _habits;
+        private List<Habit> habits;
 
         @Override
         public int getCount() {
-            return (_habits == null) ? 0 : _habits.size();
+            return (habits == null) ? 0 : habits.size();
         }
 
         @Override
         public Habit getItem(int position) {
-            return _habits.get(position);
+            return habits.get(position);
         }
 
         @Override
@@ -143,7 +143,7 @@ public class HabitsFragment extends Fragment {
         }
 
         public void setHabits(List<Habit> habits) {
-            _habits = habits;
+            this.habits = habits;
             notifyDataSetChanged();
         }
     }

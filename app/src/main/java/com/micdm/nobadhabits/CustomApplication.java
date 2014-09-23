@@ -7,12 +7,12 @@ import com.micdm.nobadhabits.events.intents.IntentBasedEventManager;
 
 public class CustomApplication extends Application {
 
-    private EventManager _eventManager;
+    private EventManager eventManager;
 
     public EventManager getEventManager() {
-        if (_eventManager == null) {
-            _eventManager = new IntentBasedEventManager(this);
+        if (eventManager == null) {
+            eventManager = new IntentBasedEventManager(this);
         }
-        return _eventManager;
+        return eventManager;
     }
 }

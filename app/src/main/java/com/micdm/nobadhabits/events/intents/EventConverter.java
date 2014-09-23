@@ -17,10 +17,10 @@ import java.util.ArrayList;
 
 public class EventConverter {
 
-    private final Context _context;
+    private final Context context;
 
     public EventConverter(Context context) {
-        _context = context;
+        this.context = context;
     }
 
     public Intent convert(Event event) {
@@ -43,7 +43,7 @@ public class EventConverter {
     }
 
     public String getIntentAction(EventType type) {
-        return String.format("%s.event.%s", _context.getPackageName(), type);
+        return String.format("%s.event.%s", context.getPackageName(), type);
     }
 
     private void buildIntentForLoadHabitsEvent(LoadHabitsEvent event, Intent intent) {

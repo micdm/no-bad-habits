@@ -22,10 +22,10 @@ public class HabitParcel implements Parcelable {
         }
     };
 
-    private final Habit _habit;
+    private final Habit habit;
 
     public HabitParcel(Habit habit) {
-        _habit = habit;
+        this.habit = habit;
     }
 
     @Override
@@ -35,11 +35,11 @@ public class HabitParcel implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel out, int flags) {
-        out.writeString(_habit.getTitle());
-        out.writeString(_habit.getStartDate().toString());
+        out.writeString(habit.getTitle());
+        out.writeString(habit.getStartDate().toString());
     }
 
     public Habit getHabit() {
-        return _habit;
+        return habit;
     }
 }

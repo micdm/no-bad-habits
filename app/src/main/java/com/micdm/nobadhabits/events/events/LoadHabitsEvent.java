@@ -8,14 +8,14 @@ import java.util.List;
 
 public class LoadHabitsEvent extends Event {
 
-    private final List<Habit> _habits;
+    private final List<Habit> habits;
 
     public LoadHabitsEvent(List<Habit> habits) {
         super(EventType.LOAD_HABITS);
-        _habits = habits;
+        this.habits = habits;
     }
 
     public List<Habit> getHabits() {
-        return _habits;
+        return habits;
     }
 }

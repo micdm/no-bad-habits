@@ -4,19 +4,19 @@ import org.joda.time.DateTime;
 
 public class Habit {
 
-    private final String _title;
-    private final DateTime _startDate;
+    private final String title;
+    private final DateTime startDate;
 
     public Habit(String title, DateTime startDate) {
-        _title = title;
-        _startDate = startDate;
+        this.title = title;
+        this.startDate = startDate;
     }
 
     public String getTitle() {
-        return _title;
+        return title;
     }
 
     public DateTime getStartDate() {
-        return _startDate;
+        return startDate;
     }
 }

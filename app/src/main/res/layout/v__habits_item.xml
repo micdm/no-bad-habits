@@ -32,28 +32,28 @@
                 android:id="@+id/v__habits_item__duration_years"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/duration_unit_year"
+                android:textColor="@color/v__habits_item__duration_years_text"
                 android:textSize="25sp"
                 style="@style/Duration"/>
             <com.micdm.nobadhabits.misc.KernedTextView
                 android:id="@+id/v__habits_item__duration_months"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/duration_unit_month"
+                android:textColor="@color/v__habits_item__duration_months_text"
                 android:textSize="21sp"
                 style="@style/Duration"/>
             <com.micdm.nobadhabits.misc.KernedTextView
                 android:id="@+id/v__habits_item__duration_weeks"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/duration_unit_week"
+                android:textColor="@color/v__habits_item__duration_weeks_text"
                 android:textSize="17sp"
                 style="@style/Duration"/>
             <com.micdm.nobadhabits.misc.KernedTextView
                 android:id="@+id/v__habits_item__duration_days"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/duration_unit_day"
+                android:textColor="@color/v__habits_item__duration_days_text"
                 android:textSize="13sp"
                 style="@style/Duration"/>
         </LinearLayout>

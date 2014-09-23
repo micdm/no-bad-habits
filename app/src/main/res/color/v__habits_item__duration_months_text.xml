@@ -3,5 +3,5 @@
     <item
         android:state_selected="true"
         android:color="@color/v__habits_item__selected_text"/>
-    <item android:color="#333"/>
+    <item android:color="#3bda00"/>
 </selector>

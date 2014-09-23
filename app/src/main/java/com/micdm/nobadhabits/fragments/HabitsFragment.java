@@ -73,10 +73,18 @@ public class HabitsFragment extends Fragment {
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
+            ViewHolder holder;
             if (convertView == null) {
                 convertView = View.inflate(getActivity(), R.layout.v__habits_item, null);
+                holder = getHolder(convertView);
+                convertView.setTag(holder);
+                holder.durationYearsView.setTypeface(TYPEFACE);
+                holder.durationMonthsView.setTypeface(TYPEFACE);
+                holder.durationWeeksView.setTypeface(TYPEFACE);
+                holder.durationDaysView.setTypeface(TYPEFACE);
+            } else {
+                holder = (ViewHolder) convertView.getTag();
             }
-            ViewHolder holder = getHolder(convertView);
             Habit habit = getItem(position);
             holder.contentView.setSelected(selectedHabit == habit);
             holder.titleView.setText(habit.getTitle());
@@ -85,27 +93,23 @@ public class HabitsFragment extends Fragment {
         }
 
         private ViewHolder getHolder(View view) {
-            ViewHolder holder = (ViewHolder) view.getTag();
-            if (holder == null) {
-                holder = new ViewHolder();
-                holder.contentView = view.findViewById(R.id.v__habits_item__content);
-                holder.titleView = (TextView) view.findViewById(R.id.v__habits_item__title);
-                holder.textDurationView = (TextView) view.findViewById(R.id.v__habits_item__text_duration);
-                holder.graphicsDurationView = view.findViewById(R.id.v__habits_item__graphics_duration);
-                holder.durationYearsView = (TextView) view.findViewById(R.id.v__habits_item__duration_years);
-                holder.durationMonthsView = (TextView) view.findViewById(R.id.v__habits_item__duration_months);
-                holder.durationWeeksView = (TextView) view.findViewById(R.id.v__habits_item__duration_weeks);
-                holder.durationDaysView = (TextView) view.findViewById(R.id.v__habits_item__duration_days);
-                view.setTag(holder);
-            }
+            ViewHolder holder = new ViewHolder();
+            holder.contentView = view.findViewById(R.id.v__habits_item__content);
+            holder.titleView = (TextView) view.findViewById(R.id.v__habits_item__title);
+            holder.textDurationView = (TextView) view.findViewById(R.id.v__habits_item__text_duration);
+            holder.graphicsDurationView = view.findViewById(R.id.v__habits_item__graphics_duration);
+            holder.durationYearsView = (TextView) view.findViewById(R.id.v__habits_item__duration_years);
+            holder.durationMonthsView = (TextView) view.findViewById(R.id.v__habits_item__duration_months);
+            holder.durationWeeksView = (TextView) view.findViewById(R.id.v__habits_item__duration_weeks);
+            holder.durationDaysView = (TextView) view.findViewById(R.id.v__habits_item__duration_days);
             return holder;
         }
 
         private void setupDurationViews(ViewHolder holder, Habit habit) {
+            int days = Days.daysBetween(habit.getStartDate(), DateTime.now()).getDays();
             switch (durationMode) {
                 case TEXT:
                     holder.graphicsDurationView.setVisibility(View.GONE);
-                    int days = Days.daysBetween(habit.getStartDate(), DateTime.now()).getDays();
                     String text;
                     if (days == 0) {
                         text = getString(R.string.f__habits__text_duration_first_day);
@@ -117,25 +121,27 @@ public class HabitsFragment extends Fragment {
                     break;
                 case GRAPHICS:
                     holder.textDurationView.setVisibility(View.GONE);
-                    Period duration = new Period(habit.getStartDate(), DateTime.now());
-                    setupDurationView(holder.durationYearsView, duration.getYears(), false);
-                    setupDurationView(holder.durationMonthsView, duration.getMonths(), false);
-                    setupDurationView(holder.durationWeeksView, duration.getWeeks(), false);
-                    setupDurationView(holder.durationDaysView, duration.getDays(), true);
+                    if (days == 0) {
+                        holder.durationYearsView.setVisibility(View.GONE);
+                        holder.durationMonthsView.setVisibility(View.GONE);
+                        holder.durationWeeksView.setVisibility(View.GONE);
+                        holder.durationDaysView.setText(getString(R.string.f__habits__graphics_duration_incomplete_unit));
+                        holder.durationDaysView.setVisibility(View.VISIBLE);
+                    } else {
+                        Period duration = new Period(habit.getStartDate(), DateTime.now());
+                        setupDurationView(holder.durationYearsView, duration.getYears());
+                        setupDurationView(holder.durationMonthsView, duration.getMonths());
+                        setupDurationView(holder.durationWeeksView, duration.getWeeks());
+                        setupDurationView(holder.durationDaysView, duration.getDays());
+                    }
                     holder.graphicsDurationView.setVisibility(View.VISIBLE);
                     break;
             }
         }
 
-        private void setupDurationView(TextView view, int duration, boolean showIfIncomplete) {
-            view.setTypeface(TYPEFACE);
+        private void setupDurationView(TextView view, int duration) {
             if (duration == 0) {
-                if (showIfIncomplete) {
-                    view.setText(getString(R.string.f__habits__graphics_duration_incomplete_unit));
-                    view.setVisibility(View.VISIBLE);
-                } else {
-                    view.setVisibility(View.GONE);
-                }
+                view.setVisibility(View.GONE);
             } else {
                 view.setText(StringUtils.repeat(getString(R.string.f__habits__graphics_duration_unit), duration));
                 view.setVisibility(View.VISIBLE);

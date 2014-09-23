@@ -9,6 +9,6 @@
         <item name="android:shadowColor">#000</item>
         <item name="android:shadowRadius">1</item>
         <item name="android:layout_marginRight">5dp</item>
-        <item name="letterSpacing">-2</item>
+        <item name="letterSpacing">-1.7</item>
     </style>
 </resources>

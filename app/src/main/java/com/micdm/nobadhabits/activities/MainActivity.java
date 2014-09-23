@@ -72,6 +72,14 @@ public class MainActivity extends FragmentActivity {
     }
 
     @Override
+    public void onStart() {
+        super.onStart();
+        if (habitManager.get().size() == 0) {
+            showAddHabitDialog();
+        }
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main, menu);
         return true;

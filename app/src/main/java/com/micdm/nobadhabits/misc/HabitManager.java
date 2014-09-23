@@ -32,8 +32,8 @@ public class HabitManager {
         return habits;
     }
 
-    public void add(String title) {
-        habits.add(new Habit(title, DateTime.now()));
+    public void add(String title, DateTime startDate) {
+        habits.add(new Habit(title, startDate));
         save(habits);
         habits = null;
     }

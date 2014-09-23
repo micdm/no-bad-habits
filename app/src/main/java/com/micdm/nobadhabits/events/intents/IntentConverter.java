@@ -10,7 +10,11 @@ import com.micdm.nobadhabits.events.events.LoadHabitsEvent;
 import com.micdm.nobadhabits.events.events.RequestAddHabitEvent;
 import com.micdm.nobadhabits.events.events.RequestLoadHabitsEvent;
 import com.micdm.nobadhabits.events.events.RequestRemoveHabitEvent;
+import com.micdm.nobadhabits.events.events.SelectDateEvent;
 import com.micdm.nobadhabits.parcels.HabitParcel;
+
+import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,6 +31,8 @@ public class IntentConverter {
                 return getRequestAddHabitEvent(intent);
             case REQUEST_REMOVE_HABIT:
                 return getRequestRemoveHabitEvent(intent);
+            case SELECT_DATE:
+                return getSelectDateEvent(intent);
             default:
                 throw new RuntimeException("unknown event type");
         }
@@ -54,11 +60,17 @@ public class IntentConverter {
 
     private RequestAddHabitEvent getRequestAddHabitEvent(Intent intent) {
         String title = intent.getStringExtra("title");
-        return new RequestAddHabitEvent(title);
+        DateTime startDate = new DateTime(intent.getStringExtra("start_date"));
+        return new RequestAddHabitEvent(title, startDate);
     }
 
     private RequestRemoveHabitEvent getRequestRemoveHabitEvent(Intent intent) {
         Habit habit = ((HabitParcel) intent.getParcelableExtra("habit")).getHabit();
         return new RequestRemoveHabitEvent(habit);
+    }
+
+    private SelectDateEvent getSelectDateEvent(Intent intent) {
+        LocalDate date = new LocalDate(intent.getStringExtra("date"));
+        return new SelectDateEvent(date);
     }
 }

@@ -1,9 +1,9 @@
 package com.micdm.nobadhabits.activities;
 
-import android.app.Activity;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -19,7 +19,7 @@ import com.micdm.nobadhabits.fragments.AddHabitFragment;
 import com.micdm.nobadhabits.fragments.HabitsFragment;
 import com.micdm.nobadhabits.misc.HabitManager;
 
-public class MainActivity extends Activity {
+public class MainActivity extends FragmentActivity {
 
     private static final String HABIT_LIST_FRAGMENT_TAG = "habit_list";
     private static final String ADD_HABIT_FRAGMENT_TAG = "add_habit";
@@ -45,7 +45,7 @@ public class MainActivity extends Activity {
         manager.subscribe(this, EventType.REQUEST_ADD_HABIT, new EventManager.OnEventListener<RequestAddHabitEvent>() {
             @Override
             public void onEvent(RequestAddHabitEvent event) {
-                habitManager.add(event.getTitle());
+                habitManager.add(event.getTitle(), event.getStartDate());
                 manager.publish(new LoadHabitsEvent(habitManager.get()));
             }
         });
@@ -59,7 +59,7 @@ public class MainActivity extends Activity {
     }
 
     private void addHabitListFragment() {
-        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.add(R.id.a__main__content, new HabitsFragment(), HABIT_LIST_FRAGMENT_TAG);
         transaction.commit();
     }
@@ -81,7 +81,7 @@ public class MainActivity extends Activity {
     }
 
     private void showAddHabitDialog() {
-        FragmentManager manager = getFragmentManager();
+        FragmentManager manager = getSupportFragmentManager();
         if (manager.findFragmentByTag(ADD_HABIT_FRAGMENT_TAG) == null) {
             (new AddHabitFragment()).show(manager, ADD_HABIT_FRAGMENT_TAG);
         }

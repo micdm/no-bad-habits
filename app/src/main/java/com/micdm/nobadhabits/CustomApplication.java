@@ -3,7 +3,7 @@ package com.micdm.nobadhabits;
 import android.app.Application;
 
 import com.micdm.nobadhabits.events.EventManager;
-import com.micdm.nobadhabits.events.intents.IntentBasedEventManager;
+import com.micdm.nobadhabits.events.PlainEventManager;
 
 public class CustomApplication extends Application {
 
@@ -11,7 +11,7 @@ public class CustomApplication extends Application {
 
     public EventManager getEventManager() {
         if (eventManager == null) {
-            eventManager = new IntentBasedEventManager(this);
+            eventManager = new PlainEventManager();
         }
         return eventManager;
     }

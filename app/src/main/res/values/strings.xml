@@ -7,7 +7,10 @@
     <string name="m__habit__edit">Редактировать…</string>
     <string name="m__habit__remove">Удалить</string>
     <!-- Фрагмент для добавления привычки -->
-    <string name="f__edit_habit__hint">От чего отвыкаем?</string>
+    <string name="f__edit_habit__title_hint">От чего отвыкаешь?</string>
+    <string name="f__edit_habit__start_date">Начинай прям сегодня.</string>
+    <string name="f__edit_habit__start_date_past">Держишься с %s?\nНеплохо!</string>
+    <string name="f__edit_habit__select_date">ну или когда?</string>
     <string-array name="f__edit_habit__quick_choices">
         <item>1F6AC</item> <!-- Сигареты -->
         <item>1F37A</item> <!-- Алкоголь -->

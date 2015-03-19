@@ -1,28 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:padding="16dp">
     <EditText
         android:id="@+id/f__edit_habit__title"
         android:layout_width="match_parent"
         android:layout_height="44dp"
-        android:layout_toLeftOf="@+id/f__edit_habit__date"
-        android:hint="@string/f__edit_habit__hint"
+        android:hint="@string/f__edit_habit__title_hint"
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
-        android:gravity="center_vertical"
-        android:textSize="20sp"/>
-    <ImageView
-        android:id="@+id/f__edit_habit__date"
-        android:layout_width="44dp"
-        android:layout_height="44dp"
-        android:layout_alignParentRight="true"
-        android:src="@drawable/ic_action_go_to_today"/>
-    <LinearLayout
-        android:id="@+id/f__edit_habit__quick_choices"
-        android:layout_width="match_parent"
+        android:gravity="center"
+        android:textSize="18sp"/>
+    <TextView
+        android:id="@+id/f__edit_habit__start_date"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
         android:layout_below="@id/f__edit_habit__title"
-        android:orientation="horizontal"
-        android:gravity="center"/>
+        android:layout_marginTop="10dp"
+        android:gravity="center"
+        android:padding="10dp"
+        android:textSize="18sp"
+        android:text="@string/f__edit_habit__start_date"/>
+    <TextView
+        android:id="@+id/f__edit_habit__select_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/f__edit_habit__start_date"
+        android:layout_marginTop="10dp"
+        android:padding="10dp"
+        android:background="@drawable/f__edit_habit_button__background"
+        android:textColor="#fff"
+        android:textSize="18sp"
+        android:text="@string/f__edit_habit__select_date"/>
 </RelativeLayout>

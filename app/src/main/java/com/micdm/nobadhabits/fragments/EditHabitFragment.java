@@ -9,7 +9,6 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.micdm.nobadhabits.CustomApplication;
@@ -23,15 +22,19 @@ import com.micdm.nobadhabits.misc.FragmentTag;
 import com.micdm.nobadhabits.parcels.HabitParcel;
 
 import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 
 public class EditHabitFragment extends DialogFragment {
 
     private static final String INIT_ARG_HABIT = "habit";
+    private static final DateTimeFormatter dateFormatter = DateTimeFormat.shortDate();
 
     private Habit habit;
     private DateTime startDate;
 
     private TextView titleView;
+    private TextView startDateView;
 
     public static EditHabitFragment getInstance() {
         return getInstance(null);
@@ -51,7 +54,7 @@ public class EditHabitFragment extends DialogFragment {
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         habit = getHabit();
-        startDate = (habit == null) ? DateTime.now() : habit.getStartDate();
+        startDate = (habit == null) ? DateTime.now().withTimeAtStartOfDay() : habit.getStartDate();
     }
 
     private Habit getHabit() {
@@ -82,7 +85,11 @@ public class EditHabitFragment extends DialogFragment {
         if (habit != null) {
             titleView.setText(habit.getTitle());
         }
-        View dateView = view.findViewById(R.id.f__edit_habit__date);
+        startDateView = (TextView) view.findViewById(R.id.f__edit_habit__start_date);
+        if (startDate != null) {
+            setupStartDateView();
+        }
+        View dateView = view.findViewById(R.id.f__edit_habit__select_date);
         dateView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -92,24 +99,14 @@ public class EditHabitFragment extends DialogFragment {
                 }
             }
         });
-        setupChoicesView(view);
         return view;
     }
 
-    private void setupChoicesView(View view) {
-        ViewGroup choicesView = (ViewGroup) view.findViewById(R.id.f__edit_habit__quick_choices);
-        for (String choice: getResources().getStringArray(R.array.f__edit_habit__quick_choices)) {
-            TextView choiceView = (TextView) View.inflate(getActivity(), R.layout.v__add_quick_choice, null);
-            choiceView.setText(new String(Character.toChars(Integer.parseInt(choice, 16))));
-            choiceView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    String title = ((TextView) v).getText().toString();
-                    publishEditEvent(title);
-                    dismiss();
-                }
-            });
-            choicesView.addView(choiceView);
+    private void setupStartDateView() {
+        if (startDate.isEqual(DateTime.now().withTimeAtStartOfDay())) {
+            startDateView.setText(getString(R.string.f__edit_habit__start_date));
+        } else {
+            startDateView.setText(getString(R.string.f__edit_habit__start_date_past, dateFormatter.print(startDate)));
         }
     }
 
@@ -130,6 +127,7 @@ public class EditHabitFragment extends DialogFragment {
             @Override
             public void onEvent(SelectDateEvent event) {
                 startDate = event.getDate().toDateTimeAtStartOfDay();
+                setupStartDateView();
             }
         });
     }

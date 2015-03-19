@@ -24,6 +24,7 @@ import com.micdm.nobadhabits.events.EventType;
 import com.micdm.nobadhabits.events.events.LoadHabitsEvent;
 import com.micdm.nobadhabits.events.events.RequestLoadHabitsEvent;
 import com.micdm.nobadhabits.events.events.RequestRemoveHabitEvent;
+import com.micdm.nobadhabits.misc.DurationTextBuilder;
 import com.micdm.nobadhabits.misc.FragmentTag;
 
 import org.apache.commons.lang3.StringUtils;
@@ -112,12 +113,7 @@ public class HabitsFragment extends Fragment {
             switch (durationMode) {
                 case TEXT:
                     holder.graphicsDurationView.setVisibility(View.GONE);
-                    String text;
-                    if (days == 0) {
-                        text = getString(R.string.f__habits__text_duration_first_day);
-                    } else {
-                        text = getString(R.string.f__habits__text_duration, days, getResources().getQuantityString(R.plurals.f__habits__text_duration_unit, days));
-                    }
+                    String text = DurationTextBuilder.build(getActivity(), days);
                     holder.textDurationView.setText(text);
                     holder.textDurationView.setVisibility(View.VISIBLE);
                     break;

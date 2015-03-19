@@ -17,7 +17,7 @@
         <item>1F469</item> <!-- Женщины -->
     </string-array>
     <!-- Фрагмент со списком привычек -->
-    <string name="f__habits__text_duration_first_day">Первый день</string>
+    <string name="f__habits__text_duration_first_day">первый день</string>
     <string name="f__habits__text_duration">%1$s %2$s</string>
     <plurals name="f__habits__text_duration_unit">
         <item quantity="one">день</item>

@@ -1,5 +1,8 @@
 package com.micdm.nobadhabits.activities;
 
+import android.appwidget.AppWidgetManager;
+import android.content.ComponentName;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
@@ -19,6 +22,7 @@ import com.micdm.nobadhabits.fragments.EditHabitFragment;
 import com.micdm.nobadhabits.fragments.HabitsFragment;
 import com.micdm.nobadhabits.misc.FragmentTag;
 import com.micdm.nobadhabits.misc.HabitManager;
+import com.micdm.nobadhabits.widgets.CustomAppWidgetProvider;
 
 import org.joda.time.DateTime;
 
@@ -42,6 +46,12 @@ public class MainActivity extends FragmentActivity {
                 manager.publish(new LoadHabitsEvent(habitManager.get()));
             }
         });
+        manager.subscribe(this, EventType.LOAD_HABITS, new EventManager.OnEventListener<LoadHabitsEvent>() {
+            @Override
+            public void onEvent(LoadHabitsEvent event) {
+                updateWidgets();
+            }
+        });
         manager.subscribe(this, EventType.REQUEST_EDIT_HABIT, new EventManager.OnEventListener<RequestEditHabitEvent>() {
             @Override
             public void onEvent(RequestEditHabitEvent event) {
@@ -63,6 +73,23 @@ public class MainActivity extends FragmentActivity {
                 manager.publish(new LoadHabitsEvent(habitManager.get()));
             }
         });
+    }
+
+    private void updateWidgets() {
+        int ids[] = getWidgetIds();
+        if (ids.length == 0) {
+            return;
+        }
+        Intent intent = new Intent(this, CustomAppWidgetProvider.class);
+        intent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
+        intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids);
+        sendBroadcast(intent);
+    }
+
+    private int[] getWidgetIds() {
+        AppWidgetManager manager = AppWidgetManager.getInstance(this);
+        ComponentName name = new ComponentName(this, CustomAppWidgetProvider.class);
+        return manager.getAppWidgetIds(name);
     }
 
     private void addHabitListFragment() {

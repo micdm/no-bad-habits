@@ -28,7 +28,7 @@ public class HabitManager {
 
     public List<Habit> get() {
         if (habits == null) {
-            habits = new ArrayList<Habit>(load());
+            habits = new ArrayList<>(load());
         }
         return habits;
     }
@@ -71,7 +71,7 @@ public class HabitManager {
     private void save(List<Habit> habits) {
         SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(context).edit();
         editor.putString(PREF_KEY, serialize(habits));
-        editor.commit();
+        editor.apply();
     }
 
     private String serialize(List<Habit> habits) {
@@ -91,7 +91,7 @@ public class HabitManager {
     }
 
     private List<Habit> unserialize(String serialized) {
-        List<Habit> habits = new ArrayList<Habit>();
+        List<Habit> habits = new ArrayList<>();
         try {
             JSONArray habitsJson = new JSONArray(serialized);
             for (int i = 0; i < habitsJson.length(); i += 1) {

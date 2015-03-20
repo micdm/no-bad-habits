@@ -4,7 +4,7 @@ public abstract class Event {
 
     private final EventType type;
 
-    public Event(EventType type) {
+    protected Event(EventType type) {
         this.type = type;
     }
 

@@ -11,11 +11,6 @@
     <string name="f__edit_habit__start_date">Начинай прям сегодня.</string>
     <string name="f__edit_habit__start_date_past">Держишься с %s?\nНеплохо!</string>
     <string name="f__edit_habit__select_date">ну или когда?</string>
-    <string-array name="f__edit_habit__quick_choices">
-        <item>1F6AC</item> <!-- Сигареты -->
-        <item>1F37A</item> <!-- Алкоголь -->
-        <item>1F469</item> <!-- Женщины -->
-    </string-array>
     <!-- Фрагмент со списком привычек -->
     <string name="f__habits__text_duration_first_day">первый день</string>
     <string name="f__habits__text_duration">%1$s %2$s</string>

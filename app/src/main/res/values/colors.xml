@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- http://colorscheme.ru/#36411w0w0w0w0 -->
 <resources>
+    <color name="a__main__background">#F83E5B</color>
     <color name="v__habits_item__selected_text">@android:color/white</color>
 </resources>

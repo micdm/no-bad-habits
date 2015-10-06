@@ -1,9 +1,12 @@
 <resources>
     <style name="AppTheme" parent="android:Theme.Holo.Light">
-        <item name="android:actionBarStyle">@style/ActionBarStyle</item>
+        <item name="android:actionBarStyle">@style/ActionBar</item>
+        <item name="android:actionModeBackground">@drawable/action_mode_background</item>
+        <item name="android:actionModeCloseDrawable">@drawable/ic_done_white_36dp</item>
     </style>
-    <style name="ActionBarStyle" parent="android:Widget.Holo.Light.ActionBar">
-        <item name="android:displayOptions">showHome</item>
+    <style name="ActionBar" parent="android:Widget.Holo.Light.ActionBar">
+        <item name="android:displayOptions">none</item>
+        <item name="android:background">#F83E5B</item>
     </style>
     <style name="Duration">
         <item name="android:shadowColor">#000</item>

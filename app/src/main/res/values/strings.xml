@@ -5,6 +5,7 @@
     <!-- Меню -->
     <string name="m__main__add">Добавить…</string>
     <string name="m__habit__edit">Редактировать…</string>
+    <string name="m__habit__set_favorite">Отметить как важное</string>
     <string name="m__habit__remove">Удалить</string>
     <!-- Фрагмент для добавления привычки -->
     <string name="f__edit_habit__title_hint">От чего отвыкаешь?</string>

@@ -33,16 +33,17 @@ public class HabitManager {
         return habits;
     }
 
-    public void add(String title, DateTime startDate) {
-        habits.add(new Habit(UUID.randomUUID().toString(), title, startDate));
+    public void add(String title, DateTime startDate, boolean isFavorite) {
+        habits.add(new Habit(UUID.randomUUID().toString(), title, startDate, isFavorite));
         save(habits);
         habits = null;
     }
 
-    public void update(String id, String title, DateTime startDate) {
+    public void update(String id, String title, DateTime startDate, boolean isFavorite) {
         Habit habit = getHabitById(habits, id);
         habit.setTitle(title);
         habit.setStartDate(startDate);
+        habit.setIsFavorite(isFavorite);
         save(habits);
         habits = null;
     }
@@ -82,6 +83,7 @@ public class HabitManager {
                 habitJson.put("id", habit.getId());
                 habitJson.put("title", habit.getTitle());
                 habitJson.put("start_date", habit.getStartDate().toString());
+                habitJson.put("is_favorite", habit.isFavorite());
                 habitsJson.put(habitJson);
             }
             return habitsJson.toString();
@@ -99,7 +101,8 @@ public class HabitManager {
                 String id = habitJson.getString("id");
                 String title = habitJson.getString("title");
                 DateTime startDate = new DateTime(habitJson.getString("start_date"));
-                habits.add(new Habit(id, title, startDate));
+                boolean isFavorite = habitJson.optBoolean("is_favorite", false);
+                habits.add(new Habit(id, title, startDate, isFavorite));
             }
         } catch (JSONException e) {}
         return habits;

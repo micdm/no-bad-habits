@@ -53,6 +53,11 @@ public class CustomAppWidgetProvider extends AppWidgetProvider {
                 return a.getStartDate().compareTo(b.getStartDate());
             }
         });
+        for (Habit habit: habits) {
+            if (habit.isFavorite()) {
+                return habit;
+            }
+        }
         return habits.get(0);
     }
 

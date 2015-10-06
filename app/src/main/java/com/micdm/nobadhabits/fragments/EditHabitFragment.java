@@ -112,7 +112,8 @@ public class EditHabitFragment extends DialogFragment {
 
     private void publishEditEvent(String title) {
         String id = (habit == null) ? null : habit.getId();
-        getEventManager().publish(new RequestEditHabitEvent(id, title, startDate));
+        boolean isFavorite = (habit != null && habit.isFavorite());
+        getEventManager().publish(new RequestEditHabitEvent(id, title, startDate, isFavorite));
     }
 
     @Override

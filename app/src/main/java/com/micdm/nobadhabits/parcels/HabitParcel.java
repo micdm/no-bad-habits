@@ -15,7 +15,8 @@ public class HabitParcel implements Parcelable {
             String id = in.readString();
             String title = in.readString();
             DateTime startDate = new DateTime(in.readString());
-            return new Habit(id, title, startDate);
+            boolean isFavorite = (in.readInt() == 1);
+            return new Habit(id, title, startDate, isFavorite);
         }
 
         public Habit[] newArray(int size) {
@@ -39,6 +40,7 @@ public class HabitParcel implements Parcelable {
         out.writeString(habit.getId());
         out.writeString(habit.getTitle());
         out.writeString(habit.getStartDate().toString());
+        out.writeInt(habit.isFavorite() ? 1 : 0);
     }
 
     public Habit getHabit() {

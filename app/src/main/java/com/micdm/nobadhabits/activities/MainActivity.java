@@ -58,10 +58,11 @@ public class MainActivity extends FragmentActivity {
                 String id = event.getId();
                 String title = event.getTitle();
                 DateTime startDate = event.getStartDate();
+                boolean isFavorite = event.isFavorite();
                 if (id == null) {
-                    habitManager.add(title, startDate);
+                    habitManager.add(title, startDate, isFavorite);
                 } else {
-                    habitManager.update(id, title, startDate);
+                    habitManager.update(id, title, startDate, isFavorite);
                 }
                 manager.publish(new LoadHabitsEvent(habitManager.get()));
             }

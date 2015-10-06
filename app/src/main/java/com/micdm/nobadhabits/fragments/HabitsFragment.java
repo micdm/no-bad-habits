@@ -22,6 +22,7 @@ import com.micdm.nobadhabits.data.Habit;
 import com.micdm.nobadhabits.events.EventManager;
 import com.micdm.nobadhabits.events.EventType;
 import com.micdm.nobadhabits.events.events.LoadHabitsEvent;
+import com.micdm.nobadhabits.events.events.RequestEditHabitEvent;
 import com.micdm.nobadhabits.events.events.RequestLoadHabitsEvent;
 import com.micdm.nobadhabits.events.events.RequestRemoveHabitEvent;
 import com.micdm.nobadhabits.misc.DurationTextBuilder;
@@ -55,6 +56,7 @@ public class HabitsFragment extends Fragment {
             public TextView durationMonthsView;
             public TextView durationWeeksView;
             public TextView durationDaysView;
+            public View favoriteView;
         }
 
         private List<Habit> habits;
@@ -92,6 +94,7 @@ public class HabitsFragment extends Fragment {
             holder.contentView.setSelected(selectedHabit == habit);
             holder.titleView.setText(habit.getTitle());
             setupDurationViews(holder, habit);
+            holder.favoriteView.setVisibility(habit.isFavorite() ? View.VISIBLE : View.GONE);
             return convertView;
         }
 
@@ -105,6 +108,7 @@ public class HabitsFragment extends Fragment {
             holder.durationMonthsView = (TextView) view.findViewById(R.id.v__habits_item__duration_months);
             holder.durationWeeksView = (TextView) view.findViewById(R.id.v__habits_item__duration_weeks);
             holder.durationDaysView = (TextView) view.findViewById(R.id.v__habits_item__duration_days);
+            holder.favoriteView = view.findViewById(R.id.v__habits_item__favorite);
             return holder;
         }
 
@@ -157,6 +161,11 @@ public class HabitsFragment extends Fragment {
         public boolean onCreateActionMode(ActionMode mode, Menu menu) {
             MenuInflater inflater = mode.getMenuInflater();
             inflater.inflate(R.menu.habit, menu);
+            if (selectedHabit.isFavorite()) {
+                menu.getItem(1).setVisible(false);
+            } else {
+                menu.getItem(2).setVisible(false);
+            }
             return true;
         }
         @Override
@@ -171,6 +180,16 @@ public class HabitsFragment extends Fragment {
                     if (manager.findFragmentByTag(FragmentTag.EDIT_HABIT) == null) {
                         EditHabitFragment.getInstance(selectedHabit).show(manager, FragmentTag.EDIT_HABIT);
                     }
+                    selectedHabit = null;
+                    mode.finish();
+                    return true;
+                case R.id.m__habit_set_favorite:
+                    getEventManager().publish(new RequestEditHabitEvent(selectedHabit.getId(), selectedHabit.getTitle(), selectedHabit.getStartDate(), true));
+                    selectedHabit = null;
+                    mode.finish();
+                    return true;
+                case R.id.m__habit_unset_favorite:
+                    getEventManager().publish(new RequestEditHabitEvent(selectedHabit.getId(), selectedHabit.getTitle(), selectedHabit.getStartDate(), false));
                     selectedHabit = null;
                     mode.finish();
                     return true;
@@ -214,12 +233,13 @@ public class HabitsFragment extends Fragment {
         habitsView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                if (selectedHabit == null) {
-                    view.startActionMode(onStartActionModeListener);
-                }
+                boolean needStartActionMode = (selectedHabit == null);
                 HabitsAdapter adapter = (HabitsAdapter) parent.getAdapter();
                 selectedHabit = adapter.getItem(position);
                 adapter.notifyDataSetChanged();
+                if (needStartActionMode) {
+                    view.startActionMode(onStartActionModeListener);
+                }
                 return true;
             }
         });

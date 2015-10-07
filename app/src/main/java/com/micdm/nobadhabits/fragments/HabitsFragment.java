@@ -94,7 +94,7 @@ public class HabitsFragment extends Fragment {
             holder.contentView.setSelected(selectedHabit == habit);
             holder.titleView.setText(habit.getTitle());
             setupDurationViews(holder, habit);
-            holder.favoriteView.setVisibility(habit.isFavorite() ? View.VISIBLE : View.GONE);
+            setupFavoriteView(holder.favoriteView, habit);
             return convertView;
         }
 
@@ -147,6 +147,20 @@ public class HabitsFragment extends Fragment {
             } else {
                 view.setText(StringUtils.repeat(getString(R.string.f__habits__graphics_duration_unit), duration));
                 view.setVisibility(View.VISIBLE);
+            }
+        }
+
+        private void setupFavoriteView(View view, final Habit habit) {
+            if (habit.isFavorite()) {
+                view.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        getEventManager().publish(new RequestEditHabitEvent(habit.getId(), habit.getTitle(), habit.getStartDate(), false));
+                    }
+                });
+                view.setVisibility(View.VISIBLE);
+            } else {
+                view.setVisibility(View.GONE);
             }
         }
 

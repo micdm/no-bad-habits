@@ -1,1 +1,2 @@
 -dontwarn org.joda.convert.**
+-dontwarn android.support.v4.app.NotificationCompat*
